@@ -1,0 +1,37 @@
+$main-bg-color: #919890;
+@mixin position($position, $top, $right, $bottom, $left) {
+	position: $position;
+	top: $top;
+	right: $right;
+	bottom: $bottom;
+	left: $left; 
+}
+
+#app-login {
+	.che-login-bg-opacity {
+		@include position(absolute, 0, 0, 0, 0);
+		background-color: rgba(0, 0, 0, 0.3);
+		z-index: 2;
+	}
+	.che-login-center {
+		align-self: center;
+		z-index: 4;
+	}
+	.v-card__title {
+		justify-content: center;
+	}
+	.che-login-copyright {
+		text-align: center;
+		padding: 10px 10px 1px 10px;
+	}
+}
+
+#app-login.che-login-bg {
+	background-image: url(../../assets/images/login_bg.jpg);
+	height: auto;
+	width: 100%;
+	@include position(fixed, 0, 0, 0, 0);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
