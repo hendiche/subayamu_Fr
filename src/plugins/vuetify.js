@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
-import 'vuetify/src/stylus/app.styl'
 import ja from 'vuetify/es5/locale/ja'
 
-Vue.use(Vuetify, {
+Vue.use(Vuetify);
+
+export default new Vuetify({
   theme: {
     primary: '#0074d9',
     secondary: '#424242',
@@ -16,9 +17,11 @@ Vue.use(Vuetify, {
   options: {
     customProperties: true
   },
-  iconfont: 'fa',
+  icons: {
+    iconfont: 'fa',
+  },
   lang: {
     locales: { ja },
     current: 'ja'
   },
-})
+});
