@@ -13,11 +13,13 @@
 						lazy-validation
 					>
 						<v-text-field
-							v-model='username'
-							name='username'
-							label='Username'
-							id='login-field-username'
+							v-model='email'
+							type='email'
+							name='email'
+							label='Email'
+							id='login-field-email'
 							required
+							:rules='emailRules'
 						/>
 						<v-text-field
 							v-model='password'
@@ -26,6 +28,7 @@
 							label='Password'
 							id='login-field-password'
 							required
+							:rules='passwordRules'
 						/>
 					</v-form>
 					<div class="text-xs-right">
@@ -52,17 +55,21 @@
 
 <script>
 import moment from 'moment';
+import { LOGIN } from '@/stores/actionTypes';
 // components
 
 // helpers
+import RULES from '@/helpers/RuleHelpers';
 
 export default {
 	name: 'appLogin',
-	props: {},
 	data: function() {
+		const { emailRules, passwordRules } = RULES.login;
 		return {
-			username: '',
+			email: '',
 			password: '',
+			emailRules,
+			passwordRules,
 		};
 	},
 	computed: {},
@@ -72,11 +79,16 @@ export default {
 			if (!this.$refs.form.validate()) return;
 
 			const payload = {
-				username: this.username,
-				password: this.password,
+				body: {
+					email: this.email,
+					password: this.password,
+				}
 			};
 
-			console.log(payload);
+			this.$store.dispatch(LOGIN, payload)
+			.then(() => {
+				this.$router.push('home');
+			});
 		}
 	},
 }

@@ -1,10 +1,12 @@
 <template>
 	<v-container fluid class='pa-0'>
+		<Alert />
 		<AppLogin />
 	</v-container>
 </template>
 
 <script>
+import Alert from '@/components/Alert.vue';
 import AppLogin from '@/components/login/AppLogin.vue';
 
 export default {
@@ -16,9 +18,7 @@ export default {
 	methods: {},
 	components: {
 		AppLogin,
+		Alert,
 	},
 }
 </script>
-<style>
-	
-</style>
