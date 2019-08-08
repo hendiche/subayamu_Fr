@@ -31,9 +31,6 @@
 							:rules='passwordRules'
 						/>
 					</v-form>
-					<div class="text-xs-right">
-						<a href="#">Forgot Password?</a>
-					</div>
 					<v-btn
 						id='login-btn-login'
 						large
@@ -41,6 +38,7 @@
 						block
 						@click='submit'
 						class='mt-5 mb-4'
+						:loading='isBtnLoading'
 					>
 						Login
 					</v-btn>
@@ -55,6 +53,7 @@
 
 <script>
 import moment from 'moment';
+import { mapGetters } from 'vuex';
 import { LOGIN } from '@/stores/actionTypes';
 // components
 
@@ -72,7 +71,11 @@ export default {
 			passwordRules,
 		};
 	},
-	computed: {},
+	computed: {
+		...mapGetters([
+				'isBtnLoading',
+		]),
+	},
 	methods: {
 		moment,
 		submit() {

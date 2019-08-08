@@ -6,6 +6,8 @@ import {
 	SUCCESS_LOGIN_STORE,
 	LOGOUT,
 	SET_ALERT,
+	BTN_LOADING_TRUE,
+	BTN_LOADING_FALSE,
 } from '@/stores/mutationTypes';
 import { LOGIN } from '@/stores/actionTypes';
 import { userApi } from '@/apis/index';
@@ -28,7 +30,7 @@ const mutations = {
 		localStorage.setItem('user', JSON.stringify(payload.user));
 		localStorage.setItem('token', payload.token);
 	},
-	
+
 	[LOGOUT] (state) {
 		state.user = {};
 		state.token = '';
@@ -39,14 +41,17 @@ const mutations = {
 
 const actions = {
 	[LOGIN] ({ commit }, payload) {
+		commit(BTN_LOADING_TRUE);
 		return new Promise((resolve) => {
 			userApi.login(payload.body)
 			.then(res => {
 				commit(SUCCESS_LOGIN_STORE, res);
+				commit(BTN_LOADING_FALSE);
 				resolve(true);
 			})
 			.catch(err => {
 				commit(SET_ALERT, err);
+				commit(BTN_LOADING_FALSE);
 				console.log(err);
 			});
 		});
