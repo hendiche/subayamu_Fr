@@ -8,6 +8,7 @@
 				direction='top'
 				:open-on-hover='true'
 				:transition="transition"
+				fixed
 			>
 				<template v-slot:activator>
 					<v-btn
@@ -80,7 +81,7 @@ export default {
 <style lang='scss' scoped>
 	#app-base {
 	.v-speed-dial {
-		position: absolute;
+		z-index: 1;
 	}
 
 	.v-btn--floating {

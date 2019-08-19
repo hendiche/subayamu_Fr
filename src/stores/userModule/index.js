@@ -21,6 +21,23 @@ const getters = {
 	userToken: (state) => {
 		return state.token;
 	},
+	getJoinedProjects: (state) => {
+		// return state.user.joined_projects;
+		return [
+			{
+				_id: 'assa1',
+				name: 'name',
+			},
+			{
+				_id: 'dsad2',
+				name: 'name2',
+			},
+			{
+				_id: 'dsa3',
+				name: 'name3',
+			}
+		];
+	},
 };
 
 const mutations = {
