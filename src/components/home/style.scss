@@ -13,6 +13,16 @@ $section-padding: 4em 1em;
 	.che-home-tab-spacer {
 		padding: 24px 0;
 	}
+	.che-tab {
+		max-width: 200px;
+	}
+	.che-tab:first-child {
+		margin-left: 20px;
+	}
+	.che-tab:last-child {
+		margin-right: 20px;
+	}
+
 }
 
 #app-doc-sec {

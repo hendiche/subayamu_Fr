@@ -42,7 +42,7 @@ export default {
 			// tinymce editor component
 			editorInit: {
 				plugins: 'table link lists advlist charmap hr',
-				toolbar: 'formatselect | fontselect | fontsizeselect | bold italic underline strikethrough forecolor backcolor link | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent |',
+				toolbar: 'formatselect | fontselect | fontsizeselect | bold italic underline strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent |',
 				content_css: [
           '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
           '//www.tiny.cloud/css/codepen.min.css'

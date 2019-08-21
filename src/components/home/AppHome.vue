@@ -8,6 +8,7 @@
 				dark
 				show-arrows
 				hide-slider
+				center-active
 				class='che-home-tabs'
 				@change='changeTab'
 			>
@@ -15,7 +16,7 @@
 				<v-tab
 					v-for='(item, index) in getJoinedProjects'
 					:key='item._id'
-					class='pa-0'
+					class='pa-0 che-tab'
 				>
 					<v-btn
 						v-if='getJoinedProjects.length - 1 == index'
@@ -23,6 +24,7 @@
 						x-large
 						color='indigo'
 						depressed
+						@click='showAddTabModal = true'
 					>
 						<i class="fas fa-plus"></i>
 					</v-btn>
@@ -50,6 +52,11 @@
 				</v-tab-item>
 			</v-tabs-items>
 		</v-flex>
+
+		<addTabModal
+			:modal='showAddTabModal'
+			@close='showAddTabModal = false'
+		/>
 	</v-layout>
 </template>
 
@@ -59,6 +66,8 @@ import AppDocSec from './docSec/AppDocSec.vue';
 import AppSlideSec from './slideSec/AppSlideSec.vue';
 import AppVideoSec from './videoSec/AppVideoSec.vue';
 
+import addTabModal from '@/modals/addTabModal.vue';
+
 export default {
 	name: 'appHome',
 	props: {},
@@ -66,6 +75,9 @@ export default {
 		return {
 			tab: null,
 			oldTabIdx: -1,
+
+			// add tab modal component
+			showAddTabModal: false,
 		};
 	},
 	computed: {
@@ -88,6 +100,7 @@ export default {
 		AppDocSec,
 		AppSlideSec,
 		AppVideoSec,
+		addTabModal,
 	}
 }
 </script>
