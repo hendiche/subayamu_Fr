@@ -14,6 +14,7 @@ const modules = {
 const state = {
 	alertObj: {
 		showAlert: false,
+		success: null,
 		msg: '',
 		msgArr: [],
 	},
@@ -32,6 +33,7 @@ const getters = {
 const mutations = {
 	[SET_ALERT] (state, payload) {
 		state.alertObj.showAlert = true;
+		state.alertObj.success = payload.success;
 		state.alertObj.msg = payload.msg;
 		state.alertObj.msgArr = payload.msgArr;
 	},

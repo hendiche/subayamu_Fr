@@ -3,45 +3,19 @@
 		<div class="che-login-bg-opacity"></div>
 		<v-flex lg4 offset-lg4 xs10 offset-xs1 class='che-login-center'>
 			<v-card>
-				<v-card-title primary-title>
-					<h3 class="headline mb-0">LOGIN</h3>
-				</v-card-title>
 				<v-card-text>
-					<v-form
-						ref='form'
-						@keyup.native.enter='submit'
-						lazy-validation
-					>
-						<v-text-field
-							v-model='email'
-							type='email'
-							name='email'
-							label='Email'
-							id='login-field-email'
-							required
-							:rules='emailRules'
-						/>
-						<v-text-field
-							v-model='password'
-							type='password'
-							name='password'
-							label='Password'
-							id='login-field-password'
-							required
-							:rules='passwordRules'
-						/>
-					</v-form>
-					<v-btn
-						id='login-btn-login'
-						large
-						color='success'
-						block
-						@click='submit'
-						class='mt-5 mb-4'
-						:loading='isBtnLoading'
-					>
-						Login
-					</v-btn>
+					<v-tabs grow>
+						<v-tab>LOGIN</v-tab>
+						<v-tab>REGISTER</v-tab>
+
+						<v-tab-item>
+							<LoginForm />
+						</v-tab-item>
+							
+						<v-tab-item>
+							<RegisterForm />
+						</v-tab-item>
+					</v-tabs>
 				</v-card-text>
 				<div class='che-login-copyright'>
 					<p>Copyright {{ moment().format('YYYY') }} 奥多摩日本語学校. All rights reserved</p>
@@ -56,6 +30,8 @@ import moment from 'moment';
 import { mapGetters } from 'vuex';
 import { LOGIN } from '@/stores/actionTypes';
 // components
+import LoginForm from './LoginForm.vue';
+import RegisterForm from './RegisterForm.vue';
 
 // helpers
 import RULES from '@/helpers/RuleHelpers';
@@ -94,6 +70,10 @@ export default {
 			});
 		}
 	},
+	components: {
+		LoginForm,
+		RegisterForm,
+	}
 }
 </script>
 <style lang='scss' scoped>

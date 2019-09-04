@@ -9,7 +9,7 @@ import {
 	BTN_LOADING_TRUE,
 	BTN_LOADING_FALSE,
 } from '@/stores/mutationTypes';
-import { LOGIN } from '@/stores/actionTypes';
+import { LOGIN, REGISTER } from '@/stores/actionTypes';
 import { userApi } from '@/apis/index';
 
 const state = {
@@ -71,6 +71,20 @@ const actions = {
 				commit(BTN_LOADING_FALSE);
 				console.log(err);
 			});
+		});
+	},
+
+	[REGISTER] ({ commit }, payload) {
+		commit(BTN_LOADING_TRUE);
+		userApi.register(payload.body)
+		.then(res => {
+			commit(SET_ALERT, res);
+			commit(BTN_LOADING_FALSE);
+		})
+		.catch(err => {
+			commit(SET_ALERT, err);
+			commit(BTN_LOADING_FALSE);
+			console.log(err);
 		});
 	},
 
