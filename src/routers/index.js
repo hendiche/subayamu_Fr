@@ -1,5 +1,3 @@
-import exampleRoutes from './example';
-
 const routes = [
   { path: '', redirect: '/login' },
   {
@@ -28,5 +26,4 @@ export default [
   //   name: 'home',
   //   component: () => import('@/views/Home.vue'),
   // },
-	...exampleRoutes,
 ];
