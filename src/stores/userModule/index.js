@@ -14,33 +14,22 @@ import { userApi } from '@/apis/index';
 
 const state = {
 	token: localStorage.getItem('token') || '',
-	user: localStorage.getItem('user') || {},
+	user: JSON.parse(localStorage.getItem('user')) || {},
 };
 
 const getters = {
+	// return user data from state that get from local storage
+	user: (state) => {
+		return state.user;
+	},
+	// return user token for auth
 	userToken: (state) => {
 		return state.token;
-	},
-	getJoinedProjects: (state) => {
-		// return state.user.joined_projects;
-		return [
-			{
-				_id: 'assa1',
-				name: 'name',
-			},
-			{
-				_id: 'dsad2',
-				name: 'name2',
-			},
-			{
-				_id: 'dsa3',
-				name: 'name3',
-			}
-		];
 	},
 };
 
 const mutations = {
+	// after success login, store user data and token to local storage
 	[SUCCESS_LOGIN_STORE] (state, payload) {
 		state.token = payload.token;
 		state.user = payload.user;
@@ -48,6 +37,7 @@ const mutations = {
 		localStorage.setItem('token', payload.token);
 	},
 
+	// logout and remove all logged user data, also remove from local storage
 	[LOGOUT] (state) {
 		state.user = {};
 		state.token = '';
@@ -57,6 +47,8 @@ const mutations = {
 };
 
 const actions = {
+	// login action where call api of login and return promise 
+	// after success, will store user login data
 	[LOGIN] ({ commit }, payload) {
 		commit(BTN_LOADING_TRUE);
 		return new Promise((resolve) => {
@@ -74,6 +66,8 @@ const actions = {
 		});
 	},
 
+	// register actions where will call api of register and
+	// after success, will set alert
 	[REGISTER] ({ commit }, payload) {
 		commit(BTN_LOADING_TRUE);
 		userApi.register(payload.body)

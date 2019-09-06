@@ -8,7 +8,7 @@ const DOMAIN = process.env.VUE_APP_DOMAIN;
 class Api {
 	async fetch(options) {
 		const axiosObj = {
-			method: options.method || 'GET',
+			method: options.method,
 			url: DOMAIN + options.url,
 		};
 

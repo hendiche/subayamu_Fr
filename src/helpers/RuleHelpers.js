@@ -29,6 +29,25 @@ R.register = {
 		requiredPassword,
 		validateSpaceBar,
 	]
-}
+};
+
+R.createProject = {
+	nameRules: [
+		v => !!v || 'Name is required',
+		validateSpaceBar,
+	],
+	startDateRules: [
+		v => !!v || 'Start date is required',
+	],
+	endDateRules: [
+		v => !!v || 'End date is required',
+	],
+};
+
+R.joinProject = {
+	projectCodeRules: [
+		v => !!v || 'Project code is required',
+	],
+};
 
 export default R;
