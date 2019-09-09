@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from 'moment';
 
 /**
  * Array of the rows-per-page dropdown for data tables
@@ -12,9 +12,9 @@ export const rowsPerPageItems = [5];
  * @return {string} of formated date
  */
 export function momentDate(date) {
-	if (!date) return "-";
+	if (!date) return '-';
 	
-	return moment(date).format("YYYY/MM/DD");
+	return moment(date).format('YYYY/MM/DD');
 }
 
 /**
@@ -23,9 +23,9 @@ export function momentDate(date) {
  * @return {string} of formated date (contain japanese character)
  */
 export function momentDateJP(date) {
-	if (!date) return "-";
+	if (!date) return '-';
 	
-	return moment(date).format("YYYY年MM月DD日");
+	return moment(date).format('YYYY年MM月DD日');
 }
 
 /**
@@ -35,11 +35,17 @@ export function momentDateJP(date) {
  * @return {string} of limited text by passed maxLength 
  */
 export function showLimitText(text, maxLength) {
-	if (!text) return "";
+	if (!text) return '';
 
 	if (text.length > maxLength) {
-		return text.substring(0, maxLength) + " ...";
+		return text.substring(0, maxLength) + ' ...';
 	}
 
 	return text;
+}
+
+export function substringYoutubeVideoId(link) {
+	if (!link) return '';
+
+	return link.substring(link.length - 11, link.length);
 }

@@ -38,6 +38,13 @@ class HomeApi {
 			body,
 		});
 	}
+
+	async deleteYoutubeLink(youtube_id) {
+		return api.fetch({
+			url: 'projects/youtube/' + youtube_id,
+			method: 'DELETE'
+		});
+	}
 	
 }
 

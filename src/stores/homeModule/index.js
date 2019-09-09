@@ -17,6 +17,7 @@ import {
 	PROJECT_CONTENT,
 	PROJECT_CONTENT_LINK,
 	ADD_YOUTUBE_LINK,
+	DELETE_YOUTUBE_LINK,
 } from '@/stores/actionTypes';
 import { homeApi } from '@/apis/index';
 
@@ -156,6 +157,21 @@ const actions = {
 		})
 		.catch(err => {
 			console.log(err, 'error add youtube link');
+		})
+	},
+
+	// TODO: put comment about this actions here
+	async [DELETE_YOUTUBE_LINK] ({ commit, dispatch }, payload) {
+		commit(PAGE_LOADING_TRUE);
+
+		homeApi.deleteYoutubeLink(payload.params.youtube_id)
+		.then(res => {
+			console.log('==> deleted', res);
+			commit(SET_ALERT, res);
+			dispatch(PROJECT_CONTENT_LINK, payload);
+		})
+		.catch(err => {
+			console.log(err, 'error delete youtube link');
 		})
 	},
 

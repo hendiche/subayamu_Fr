@@ -19,8 +19,33 @@
 			</v-layout>
 		</template>
 
+		<template v-slot:item.name='{ item }'>
+			<div>
+				<span v-if='item._id == selectedPreviewId'>
+					<v-icon left color='primary'>fas fa-eye</v-icon>
+				</span>
+				{{ item.name }}
+			</div>
+		</template>
+
 		<template v-slot:item.created_at='{ item }'>
 			<div>{{ momentDate(item.created_at) }}</div>
+		</template>
+
+		<template v-slot:item.actions='{ item }'>
+			<div>
+				<span class='che-pointer'>
+					<v-icon
+						left 
+						@click='onChangePreview(item)'
+					>
+						far fa-object-ungroup
+					</v-icon>
+				</span>
+				<span class='che-pointer'>
+					<v-icon right @click='onDeleteLink(item)'>fas fa-trash-alt</v-icon>
+				</span>
+			</div>
 		</template>
 	</v-data-table>
 </template>
@@ -41,7 +66,9 @@ export default {
 		data: Object,
 	},
 	data: function() {
-		return {};
+		return {
+			selectedPreviewId: '',
+		};
 	},
 	computed: {
 		...mapGetters([
@@ -50,12 +77,33 @@ export default {
 
 		items() {
 			if (this.dataType === 'video') {
-				return this.videoList(this.data._id);
+				const listItem = this.videoList(this.data._id);
+
+				if (listItem.length) {
+					// set default preview
+					this.selectedPreviewId = listItem[0]._id;
+					this.$emit('changePreview', listItem[0]);
+				}
+
+				return listItem || [];
 			}
 		},
 	},
 	methods: {
 		momentDate,
+		onChangePreview(item) {
+			this.selectedPreviewId = item._id;
+			this.$emit('changePreview', item);
+		},
+		onDeleteLink(item) {
+			this.$emit('onDeleting', item);
+		},
 	},
 };
 </script>
+
+<style lang='scss' scoped>
+	.che-pointer {
+		cursor: pointer;
+	}
+</style>
