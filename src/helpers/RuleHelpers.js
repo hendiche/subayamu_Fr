@@ -50,4 +50,13 @@ R.joinProject = {
 	],
 };
 
+R.AddYoutubeLink = {
+	nameRules: [
+		v => !!v || 'Name is required',
+	],
+	linkRules: [
+		v => !!v || 'Youtube link is required',
+	],
+};
+
 export default R;

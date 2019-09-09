@@ -5,26 +5,37 @@
 import {
 	SET_ALERT,
 } from '@/stores/mutationTypes';
-import {
-	PROJECT_TABS,
-	CREATE_PROJECT, 
-	JOIN_PROJECT,
-} from '@/stores/actionTypes';
 import { 
 	SET_PROJECTS,
 	PAGE_LOADING_TRUE,
 	PAGE_LOADING_FALSE,
 } from '@/stores/mutationTypes';
+import {
+	PROJECT_TABS,
+	CREATE_PROJECT, 
+	JOIN_PROJECT,
+	PROJECT_CONTENT,
+	PROJECT_CONTENT_LINK,
+	ADD_YOUTUBE_LINK,
+} from '@/stores/actionTypes';
 import { homeApi } from '@/apis/index';
 
 const state = {
 	projectTabs: [],
+	homeContent: {},
 };
 
 const getters = {
 	// return project tabs data
 	projects: (state) => {
 		return state.projectTabs;
+	},
+	videoList: (state) => (project_id) => {
+		if (state.homeContent[project_id]) {
+			return state.homeContent[project_id].link;
+		}
+
+		return [];
 	},
 };
 
@@ -99,6 +110,74 @@ const actions = {
 			console.log(err);
 		})
 	},
+
+	// project content actions where will call post api of get document, get slides, get links
+	// first will check if the tab/project already have the data or not, if there's then no need to call api
+	// -> because it will take a lot of loading and internet resource
+	// after success will store to state homeContent
+	async [PROJECT_CONTENT] ({ commit, dispatch, state }, payload) {
+		if (state.homeContent[payload.params.project_id]) return
+
+		commit(PAGE_LOADING_TRUE);
+		const tmpPayload = {
+			...payload,
+			dispatchType: 'CONTENT',
+		};
+		const youtubeLink = dispatch(PROJECT_CONTENT_LINK, tmpPayload);
+
+		Promise.all([youtubeLink])
+		.then(allRes => {
+			const tmpData = {
+				...state.homeContent,
+				[payload.params.project_id] : {
+					link: allRes[0],
+					slide: ['asd', 'asd'],
+					docs: ['asd', 'asd'],
+				}
+			};
+
+			state.homeContent = tmpData;
+			commit(PAGE_LOADING_FALSE);
+		})
+		.catch(allErr => {
+			console.log(allErr, "cannot get content");
+		});
+	},
+
+	// TODO: put comment about this actions here
+	async [ADD_YOUTUBE_LINK] ({ commit, dispatch }, payload) {
+		commit(PAGE_LOADING_TRUE);
+
+		homeApi.addYoutubeLink(payload.body)
+		.then(res => {
+			console.log('==> add youtube link', res);
+			commit(SET_ALERT, res);
+			dispatch(PROJECT_CONTENT_LINK, payload);
+		})
+		.catch(err => {
+			console.log(err, 'error add youtube link');
+		})
+	},
+
+	// TODO: make this reuse when refresh one section only
+	// TODO: put comment about this actions here
+	async [PROJECT_CONTENT_LINK] ({ commit, state }, payload) {
+		return new Promise((resolve, reject) => {
+			homeApi.youtubeLink(payload.params.project_id)
+			.then(res => {
+				if (payload.dispatchType === 'CONTENT') return resolve(res);
+
+				const tmpData = state.homeContent;
+				tmpData[payload.params.project_id].link = res;
+				state.homeContent = tmpData;
+				commit(PAGE_LOADING_FALSE);
+			})
+			.catch(err => {
+				reject(err);
+			});
+		});
+	},
+
 };
 
 export default {

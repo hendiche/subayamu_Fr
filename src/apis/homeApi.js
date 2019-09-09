@@ -23,6 +23,21 @@ class HomeApi {
 			body,
 		});
 	}
+
+	async youtubeLink(project_id) {
+		return api.fetch({
+			url: 'projects/youtube/' + project_id,
+			method: 'GET'
+		});
+	}
+
+	async addYoutubeLink(body) {
+		return api.fetch({
+			url: 'projects/youtube/add',
+			method: 'POST',
+			body,
+		});
+	}
 	
 }
 

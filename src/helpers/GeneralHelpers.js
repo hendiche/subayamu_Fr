@@ -1,5 +1,4 @@
 import moment from "moment";
-import store from "@/store/store.js";
 
 /**
  * Array of the rows-per-page dropdown for data tables
