@@ -4,7 +4,7 @@
 		width='600'
 	>
 		<v-card>
-			<v-card-title>Add Youtube Link</v-card-title>
+			<v-card-title>Add Document</v-card-title>
 			<v-card-text>
 				<v-form ref='form' lazy-validation class='text-center' :key='counting'>
 					<v-text-field
@@ -13,14 +13,8 @@
 						required
 						:rules='nameRules'
 					/>
-					<v-text-field
-						v-model='link'
-						label='Link'
-						required
-						:rules='linkRules'
-					/>
 					<div>
-						<v-btn color='success' @click='addLink'>Add New Link</v-btn>
+						<v-btn color='success' @click='addDocs'>Add New Doc</v-btn>
 					</div>
 				</v-form>
 			</v-card-text>
@@ -30,21 +24,20 @@
 
 <script>
 import RULES from '@/helpers/RuleHelpers';
-import { ADD_YOUTUBE_LINK } from '@/stores/actionTypes';
+import { ADD_DOCS } from '@/stores/actionTypes';
+
 
 export default {
-	name: 'AddYoutubeLinkModal',
+	name: 'AddDocumentModal',
 	props: {
 		modal: Boolean,
 		data: Object,
 	},
 	data: function() {
-		const { nameRules, linkRules } = RULES.AddYoutubeLink;
+		const { nameRules } = RULES.addDocument;
 		return {
 			name: '',
-			link: '',
 			nameRules,
-			linkRules,
 			counting: 0, // for reset the component
 		};
 	},
@@ -57,16 +50,16 @@ export default {
 			set(val) {
 				if (!val) this.close();
 			}
-		},
+		},	
 	},
 	methods: {
-		addLink() {
+		addDocs() {
 			if (!this.$refs.form.validate()) return;
 
 			const payload = {
 				body: {
 					name: this.name,
-					embeded_url: this.link,
+					body: '',
 					project_id: this.data._id, // this used for body when req API POST add
 				},
 				params: {
@@ -74,16 +67,15 @@ export default {
 				},
 			};
 
-			this.$store.dispatch(ADD_YOUTUBE_LINK, payload);
+			this.$store.dispatch(ADD_DOCS, payload);
 			this.close();
 		},
 		close() {
 			this.$emit('close');
 			this.name = '';
-			this.link = '';
-		}
+		},
 	},
-}
+};
 </script>
 
 <style lang='scss' scoped>

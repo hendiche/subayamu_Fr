@@ -59,4 +59,10 @@ R.AddYoutubeLink = {
 	],
 };
 
+R.addDocument = {
+	nameRules: [
+		v => !!v || 'Name is required',
+	],
+};
+
 export default R;

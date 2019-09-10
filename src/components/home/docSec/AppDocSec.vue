@@ -4,21 +4,40 @@
 			<h1 class='mb-5'>Documents</h1>
 		</v-flex>
 		
+		<v-flex lg5 xs12 class='pa-1'>
+			<DataTable
+				v-bind='propsForDataTable'
+				:data='data'
+				@openAddModal='isShowAddModal = true'
+				@changePreview='changePreview'
+				@onDeleting='deleteLink'
+			/>
+		</v-flex>
+
 		<v-flex lg7 xs12 class='pa-1'>
 			<Editor
 				v-model='value'
 				:init='editorInit'
 			/>
 		</v-flex>
-		<v-flex lg5 xs12 class='pa-1'>
-			<DataTable v-bind='propsForDataTable' />
-		</v-flex>
+
+		<AddDocsModal
+			:modal='isShowAddModal'
+			@close='isShowAddModal = false'
+			:data='data'
+		/>
+
+		<ConfirmationModal 
+			:modal='isShowConfModal'
+			v-bind='propsForConfModal'
+			@close='isShowConfModal = false'
+			@positifConfirm='positifConfirm'
+		/>
+
 	</v-layout>
 </template>
 
 <script>
-import DataTable from '@/components/home/DataTable.vue';
-
 // tinymce
 import tinymce from 'tinymce/tinymce';
 import Editor from '@tinymce/tinymce-vue';
@@ -30,14 +49,24 @@ import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/charmap';
 import 'tinymce/plugins/hr';
 
+import DataTable from '@/components/home/DataTable.vue';
+import AddDocsModal from '@/modals/AddDocsModal.vue';
+import ConfirmationModal from '@/modals/ConfirmationModal.vue';
+
+import {
+	DELETE_DOCS,
+} from '@/stores/actionTypes';
 
 export default {
 	name: 'appDocSec',
-	props: {},
+	props: {
+		data: Object,
+	},
 	data: function() {
 		return {
 			// this component
 			value: '',
+			payload: {},
 
 			// tinymce editor component
 			editorInit: {
@@ -57,29 +86,56 @@ export default {
 			// Datatable component
 			propsForDataTable: {
 				headers,
-				items,
 				title: 'Documents List',
+				dataType: 'docs',
+			},
+
+			// add document modal component
+			isShowAddModal: false,
+
+			// confimation modal component
+			isShowConfModal: false,
+			propsForConfModal: {
+				title: 'Confirmation',
+				body: 'Are you sure delete document?',
+				positifBtn: 'Delete',
+				positifBtnColor: 'error',
+				negatifBtn: 'Cancel',
 			},
 		};
 	},
 	computed: {},
-	methods: {},
+	methods: {
+		changePreview(linkDataObj) {
+			this.value = linkDataObj.body;
+		},
+		deleteLink(linkDataObj) {
+			this.payload = {
+				params: {
+					document_id: linkDataObj._id,
+					project_id: this.data._id,
+				},
+			}
+
+			this.isShowConfModal = true;
+		},
+		positifConfirm() {
+			this.$store.dispatch(DELETE_DOCS, this.payload);
+			this.isShowConfModal = false;
+		}
+	},
 	components: {
 		DataTable,
 		Editor,
+		AddDocsModal,
+		ConfirmationModal,
 	},
 };
 
 const headers = [
 	{ text: 'name', sortable: false, value: 'name' },
-	{ text: 'start date', sortable: false, value: 'start_period' },
-	{ text: 'end period', sortable: false, value: 'end_period' },
+	{ text: 'created date', sortable: false, value: 'created_at' },
 	{ text: 'actions', sortable: false, value: 'actions' },
-];
-
-const items = [
-	{ name: 'project 1', start_period: '2019/03/03', end_period: '2019/03/03' },
-	{ name: 'project 2', start_period: '2019/02/02', end_period: '2019/02/02' },
 ];
 </script>
 <style lang='scss' scoped>

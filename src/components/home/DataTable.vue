@@ -4,6 +4,7 @@
 		:items='items'
 		:items-per-page='5'
 		class='elevation-1'
+		:key='dataType'
 	>
 		<template v-slot:top>
 			<v-layout wrap class='pa-3'>
@@ -72,21 +73,31 @@ export default {
 	},
 	computed: {
 		...mapGetters([
+			'docsList',
 			'videoList',
 		]),
 
 		items() {
-			if (this.dataType === 'video') {
-				const listItem = this.videoList(this.data._id);
+			let listItem = [];
 
-				if (listItem.length) {
-					// set default preview
-					this.selectedPreviewId = listItem[0]._id;
-					this.$emit('changePreview', listItem[0]);
-				}
-
-				return listItem || [];
+			// condition get the list items from getters, for documents
+			if (this.dataType === 'docs') {
+				listItem = this.docsList(this.data._id);
 			}
+
+			// condition get the list items from getters, for videos
+			if (this.dataType === 'video') {
+				listItem = this.videoList(this.data._id);
+			}
+
+			// set default preview from list items
+			if (listItem.length) {
+				// set default preview
+				this.selectedPreviewId = listItem[0]._id;
+				this.$emit('changePreview', listItem[0]);
+			}
+
+			return listItem;
 		},
 	},
 	methods: {

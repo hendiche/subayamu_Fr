@@ -24,6 +24,28 @@ class HomeApi {
 		});
 	}
 
+	async documents(project_id) {
+		return api.fetch({
+			url: 'projects/docs/' + project_id,
+			method: 'GET'
+		});
+	}
+
+	async addDocument(body) {
+		return api.fetch({
+			url: 'projects/docs/add',
+			method: 'POST',
+			body,
+		});
+	}
+
+	async deleteDocument(document_id) {
+		return api.fetch({
+			url: 'projects/docs/' + document_id,
+			method: 'DELETE',
+		});
+	}
+
 	async youtubeLink(project_id) {
 		return api.fetch({
 			url: 'projects/youtube/' + project_id,
