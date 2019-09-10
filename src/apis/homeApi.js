@@ -46,6 +46,28 @@ class HomeApi {
 		});
 	}
 
+	async slides(project_id) {
+		return api.fetch({
+			url: 'projects/slide/' + project_id,
+			method: 'GET'
+		});
+	}
+
+	async addSlide(body) {
+		return api.fetch({
+			url: 'projects/slide/add',
+			method: 'POST',
+			body,
+		});
+	}
+
+	async deleteSlide(slide_id) {
+		return api.fetch({
+			url: 'projects/slide/' + slide_id,
+			method: 'DELETE',
+		});
+	}
+
 	async youtubeLink(project_id) {
 		return api.fetch({
 			url: 'projects/youtube/' + project_id,

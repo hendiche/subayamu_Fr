@@ -74,6 +74,7 @@ export default {
 	computed: {
 		...mapGetters([
 			'docsList',
+			'slideList',
 			'videoList',
 		]),
 
@@ -83,6 +84,11 @@ export default {
 			// condition get the list items from getters, for documents
 			if (this.dataType === 'docs') {
 				listItem = this.docsList(this.data._id);
+			}
+
+			// condition get the list items from getters, for slides
+			if (this.dataType === 'slide') {
+				listItem = this.slideList(this.data._id);
 			}
 
 			// condition get the list items from getters, for videos

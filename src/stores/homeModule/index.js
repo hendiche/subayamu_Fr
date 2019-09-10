@@ -18,6 +18,9 @@ import {
 	PROJECT_CONTENT_DOCS,
 	ADD_DOCS,
 	DELETE_DOCS,
+	PROJECT_CONTENT_SLIDES,
+	ADD_SLIDE,
+	DELETE_SLIDE,
 	PROJECT_CONTENT_LINK,
 	ADD_YOUTUBE_LINK,
 	DELETE_YOUTUBE_LINK,
@@ -38,6 +41,13 @@ const getters = {
 	docsList: (state) => (project_id) => {
 		if (state.homeContent[project_id]) {
 			return state.homeContent[project_id].docs;
+		}
+
+		return [];
+	},
+	slideList: (state) => (project_id) => {
+		if (state.homeContent[project_id]) {
+			return state.homeContent[project_id].slides;
 		}
 
 		return [];
@@ -137,17 +147,17 @@ const actions = {
 			dispatchType: 'CONTENT',
 		};
 		const docs = dispatch(PROJECT_CONTENT_DOCS, tmpPayload);
+		const slides = dispatch(PROJECT_CONTENT_SLIDES, tmpPayload);
 		const youtubeLink = dispatch(PROJECT_CONTENT_LINK, tmpPayload);
 
-		Promise.all([docs, youtubeLink])
+		Promise.all([docs, slides, youtubeLink])
 		.then(allRes => {
-			console.log("all res", allRes);
 			const tmpData = {
 				...state.homeContent,
 				[payload.params.project_id] : {
 					docs: allRes[0],
-					link: allRes[1],
-					slide: ['asd', 'asd'],
+					slides: allRes[1],
+					link: allRes[2],
 				}
 			};
 
@@ -190,6 +200,36 @@ const actions = {
 	},
 
 	// TODO: put comment about this actions here
+	async [ADD_SLIDE] ({ commit, dispatch }, payload) {
+		commit(PAGE_LOADING_TRUE);
+
+		homeApi.addSlide(payload.body)
+		.then(res => {
+			console.log('==> add slide url', res);
+			commit(SET_ALERT, res);
+			dispatch(PROJECT_CONTENT_SLIDES, payload);
+		})
+		.catch(err => {
+			console.log(err, 'error add slide');
+		});
+	},
+
+	// TODO: put comment about this actions here 
+	async [DELETE_SLIDE] ({ commit, dispatch }, payload) {
+		commit(PAGE_LOADING_TRUE);
+
+		homeApi.deleteSlide(payload.params.slide_id)
+		.then(res => {
+			console.log('==> deleted', res);
+			commit(SET_ALERT, res);
+			dispatch(PROJECT_CONTENT_SLIDES, payload);
+		})
+		.catch(err => {
+			console.log(err, 'error delete slide');
+		});
+	},
+
+	// TODO: put comment about this actions here
 	async [ADD_YOUTUBE_LINK] ({ commit, dispatch }, payload) {
 		commit(PAGE_LOADING_TRUE);
 
@@ -221,6 +261,7 @@ const actions = {
 
 	// TODO: make this reuse when refresh one section only
 	// TODO: put comment about this actions here
+	// TODO: MOVE tmpData to mutations
 	async [PROJECT_CONTENT_DOCS] ({ commit, state }, payload) {
 		return new Promise((resolve, reject) => {
 			homeApi.documents(payload.params.project_id)
@@ -234,6 +275,7 @@ const actions = {
 			})
 			.catch(err => {
 				console.log('err get docs', err);
+				commit(SET_ALERT, res);
 				reject(err);
 			});
 		});
@@ -241,6 +283,29 @@ const actions = {
 
 	// TODO: make this reuse when refresh one section only
 	// TODO: put comment about this actions here
+	// TODO: MOVE tmpData to mutations
+	async [PROJECT_CONTENT_SLIDES] ({ commit, state }, payload) {
+		return new Promise((resolve, reject) => {
+			homeApi.slides(payload.params.project_id)
+			.then(res => {
+				if (payload.dispatchType === 'CONTENT') return resolve(res);
+
+				const tmpData = state.homeContent;
+				tmpData[payload.params.project_id].slides = res;
+				state.homeContent = tmpData;
+				commit(PAGE_LOADING_FALSE);
+			})
+			.catch(err => {
+				commit(SET_ALERT, res);
+				console.log('err get slides', err);
+				reject(err);
+			});
+		});
+	},
+
+	// TODO: make this reuse when refresh one section only
+	// TODO: put comment about this actions here
+	// TODO: MOVE tmpData to mutations
 	async [PROJECT_CONTENT_LINK] ({ commit, state }, payload) {
 		return new Promise((resolve, reject) => {
 			homeApi.youtubeLink(payload.params.project_id)
@@ -253,6 +318,8 @@ const actions = {
 				commit(PAGE_LOADING_FALSE);
 			})
 			.catch(err => {
+				commit(SET_ALERT, res);
+				console.log('err get youtube link', err);
 				reject(err);
 			});
 		});
