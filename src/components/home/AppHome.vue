@@ -14,12 +14,12 @@
 			>
 				<v-tabs-slider />
 				<v-tab
-					v-for='(item, index) in getJoinedProjects'
+					v-for='(item, index) in projects'
 					:key='item._id'
 					class='pa-0 che-tab'
 				>
 					<v-btn
-						v-if='getJoinedProjects.length - 1 == index'
+						v-if='projects.length - 1 == index'
 						block
 						x-large
 						color='indigo'
@@ -34,18 +34,28 @@
 			<div class='che-home-tab-spacer'></div>
 			<v-tabs-items v-model='tab'>
 				<v-tab-item
-					v-for='(item, index) in getJoinedProjects'
+					v-for='(item, index) in projects'
 					:key='item._id'
 				>
 					<v-card flat tile>
+						<v-card-title>
+							<h1>{{ item.name }}</h1>
+							<span>({{ item.project_code }})</span>
+						</v-card-title>
 						<v-card-text class='pa-0'>
-							<AppDocSec />
+							<AppDocSec
+								:data='projects[oldTabIdx]'
+							/>
 							<v-divider />
 
-							<AppSlideSec />
+							<AppSlideSec
+								:data='projects[oldTabIdx]'
+							/>
 							<v-divider />
 							
-							<AppVideoSec />
+							<AppVideoSec
+								:data='projects[oldTabIdx]'
+							/>
 							<v-divider />
 						</v-card-text>
 					</v-card>
@@ -62,15 +72,21 @@
 
 <script>
 import { mapGetters } from 'vuex';
+
+// components
 import AppDocSec from './docSec/AppDocSec.vue';
 import AppSlideSec from './slideSec/AppSlideSec.vue';
 import AppVideoSec from './videoSec/AppVideoSec.vue';
-
 import addTabModal from '@/modals/addTabModal.vue';
+
+import { PROJECT_TABS, PROJECT_CONTENT } from '@/stores/actionTypes';
 
 export default {
 	name: 'appHome',
 	props: {},
+	beforeCreate() {
+		this.$store.dispatch(PROJECT_TABS);
+	},
 	data: function() {
 		return {
 			tab: null,
@@ -82,7 +98,7 @@ export default {
 	},
 	computed: {
 		...mapGetters([
-			'getJoinedProjects',
+			'projects',
 		]),
 	},
 	methods: {
@@ -90,10 +106,16 @@ export default {
 			console.log(e);
 		},
 		changeTab(e) {
-			if (e == this.getJoinedProjects.length - 1) {
+			if (e == this.projects.length - 1) {
 				return this.tab = this.oldTabIdx;
 			}
 			this.oldTabIdx = e;
+
+			const payload = {
+				params: { project_id: this.projects[this.oldTabIdx]._id },
+			};
+
+			this.$store.dispatch(PROJECT_CONTENT, payload);
 		},
 	},
 	components: {

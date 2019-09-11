@@ -16,72 +16,53 @@
 					<v-tab-item>
 						<v-row align='center' justify='center' class='che-join-row'>
 							<v-col>
-								<v-form>
-									<v-text-field label='Project Code' solo />
+								<v-form
+									ref='joinForm' 
+									lazy-validation
+									class='text-center'
+									:key='counting'
+								>
+									<v-text-field
+										v-model='project_code'
+										label='Project Code'
+										solo
+										required
+										:rules='projectCodeRules'
+									/>
 								</v-form>
 							</v-col>
 							<v-col>
-								<v-btn color='success'>Join</v-btn>
+								<v-btn color='success' @click='join'>Join</v-btn>
 							</v-col>
 						</v-row>
 					</v-tab-item>
 					<v-tab-item>
-						<v-form ref='form' lazy-validation class='text-center'>
+						<v-form ref='form' lazy-validation class='text-center' :key='counting'>
 							<v-text-field 
 								v-model='name'
 								label='Project Name'
 								required
+								:rules='nameRules'
 							/>
-							<v-menu
-								ref="menu"
-								v-model="menu"
-								:close-on-content-click="false"
-								:return-value.sync="start_date"
-								transition="scale-transition"
-								offset-y
-								full-width
-								min-width="290px"
-							>
-								<template v-slot:activator="{ on }">
-									<v-text-field
-										v-model="start_date"
-										label="Start Date"
-										readonly
-										v-on="on"
-									></v-text-field>
-								</template>
-								<v-date-picker v-model="start_date" no-title scrollable>
-									<v-spacer></v-spacer>
-									<v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-									<v-btn text color="primary" @click="$refs.menu.save(start_date)">OK</v-btn>
-								</v-date-picker>
-							</v-menu>
-							<v-menu
-								ref="menu"
-								v-model="menu"
-								:close-on-content-click="false"
-								:return-value.sync="end_date"
-								transition="scale-transition"
-								offset-y
-								full-width
-								min-width="290px"
-							>
-								<template v-slot:activator="{ on }">
-									<v-text-field
-										v-model="end_date"
-										label="End Date"
-										readonly
-										v-on="on"
-									></v-text-field>
-								</template>
-								<v-date-picker v-model="end_date" no-title scrollable>
-									<v-spacer></v-spacer>
-									<v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-									<v-btn text color="primary" @click="$refs.menu.save(end_date)">OK</v-btn>
-								</v-date-picker>
-							</v-menu>
+							<DatePicker
+								label='Start Date'
+								:value='start_period'
+								:rules='startDateRules'
+								@save='(val) => {start_period = val}'
+							/>
+							<DatePicker
+								label='End Date'
+								:value='end_period'
+								:rules='endDateRules'
+								@save='(val) => {end_period = val}'
+							/>
 							<div>
-								<v-btn color='success'>Create</v-btn>
+								<v-btn
+									color='success'
+									@click='create'
+								>
+									Create
+								</v-btn>
 							</div>
 						</v-form>
 					</v-tab-item>
@@ -93,35 +74,84 @@
 </template>
 
 <script>
+import DatePicker from '@/components/DatePicker';
+import RULES from '@/helpers/RuleHelpers';
+import {
+	CREATE_PROJECT,
+	JOIN_PROJECT,
+} from '@/stores/actionTypes';
+
 export default {
 	name: 'addTabModal',
 	props: {
 		modal: Boolean,
 	},
 	data: function() {
+		const { nameRules, startDateRules, endDateRules } = RULES.createProject;
+		const { projectCodeRules } = RULES.joinProject;
+		
 		return {
 			tab: null,
 			name: '',
-			menu: false,
-			start_date: new Date().toISOString().substr(0, 10),
-			end_date: new Date().toISOString().substr(0, 10),
+			start_period: new Date().toISOString().substr(0, 10),
+			end_period: new Date().toISOString().substr(0, 10),
+			nameRules,
+			startDateRules,
+			endDateRules,
+			project_code: '',
+			projectCodeRules,
+			counting: 0, // for reset the component
 		};
 	},
 	computed: {
 		dialog: {
 			get() {
+				if (this.modal) this.counting += 1;
 				return this.modal;
 			},
 			set(val) {
 				if (!val) this.close();
 			}
-		}
+		},
 	},
 	methods: {
+		create() {
+			if (!this.$refs.form.validate()) return;
+
+			const payload = {
+				body: {
+					name: this.name,
+					start_period: this.start_period,
+					end_period: this.end_period,
+				}
+			};
+
+			this.$store.dispatch(CREATE_PROJECT, payload);
+			this.close();
+		},
+		join() {
+			if (!this.$refs.joinForm.validate()) return;
+
+			const payload = {
+				body: {
+					project_code: this.project_code,
+				}
+			};
+
+			this.$store.dispatch(JOIN_PROJECT, payload);
+			this.close();
+		},
 		close() {
 			this.$emit('close');
+			this.name = '';
+			this.start_period = new Date().toISOString().substr(0, 10);
+			this.end_period = new Date().toISOString().substr(0, 10);
+			this.project_code = '';
 		}
 	},
+	components: {
+		DatePicker,
+	}
 }
 </script>
 
