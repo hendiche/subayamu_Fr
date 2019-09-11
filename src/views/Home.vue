@@ -1,13 +1,21 @@
 <template>
-  <HelloWorld />
+	<v-container fluid class='pa-0'>
+		<AppHome />
+	</v-container>
 </template>
 
 <script>
-  import HelloWorld from '../components/HelloWorld'
+import AppHome from '@/components/home/AppHome.vue';
 
-  export default {
-    components: {
-      HelloWorld
-    }
-  }
+export default {
+	name: 'home',
+	data: function() {
+		return {};
+	},
+	computed: {},
+	methods: {},
+	components: {
+		AppHome,
+	}
+}
 </script>

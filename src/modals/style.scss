@@ -1,0 +1,12 @@
+#che-add-tab-dialog {
+	.v-window-item {
+		min-height: 250px;
+	}	
+	.che-join-row {
+		min-height: inherit;
+
+		.col:last-child {
+			margin-top: -27px;
+		};
+	}
+}

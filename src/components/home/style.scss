@@ -1,0 +1,46 @@
+$section-padding: 4em 1em;
+
+@mixin frame-size {
+	width: 90%;
+	height: 455px;
+}
+
+#app-home {
+	.che-home-tabs {
+		position: fixed;
+		z-index: 1;
+	}
+	.che-home-tab-spacer {
+		padding: 24px 0;
+	}
+	.che-tab {
+		max-width: 200px;
+	}
+	.che-tab:first-child {
+		margin-left: 20px;
+	}
+	.che-tab:last-child {
+		margin-right: 20px;
+	}
+
+}
+
+#app-doc-sec {
+	padding: $section-padding;
+}
+
+#app-slide-sec {
+	padding: $section-padding;
+
+	.che-iframe-slide {
+		@include frame-size;
+	}
+}
+
+#app-video-sec {
+	padding: $section-padding;
+
+	.che-iframe-video {
+		@include frame-size;
+	}
+}

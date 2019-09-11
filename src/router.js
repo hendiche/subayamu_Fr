@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Store from './store';
+import store from './store';
+import { RESET_ALERT } from '@/stores/mutationTypes';
 
 import routes from '@/routers/index';
 Vue.use(Router);
@@ -12,7 +13,7 @@ const router = new Router({
 
 const getUserAuth = async () => {
 	return new Promise(async (resolve) => {
-		const token = await Store.getters.userToken;
+		const token = await store.getters.userToken;
 		resolve(token);
 	});
 }
@@ -20,6 +21,7 @@ const getUserAuth = async () => {
 router.beforeEach((to, from, next) => {
 	const noReqAuth = to.meta.notRequiresAuth;
 
+	store.commit(RESET_ALERT);
 	getUserAuth()
 	.then(userAuth => {
 		// check route if meta obj is exists, then check if 'noReqAuth' == false required *(both should true)
