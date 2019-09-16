@@ -15,14 +15,19 @@
 		</v-flex>
 
 		<v-flex lg7 xs12 class='pa-1 text-center'>
-			<iframe
-				:src='iframeSrc'
-				frameborder="0" 
-				allowfullscreen="true" 
-				mozallowfullscreen="true" 
-				webkitallowfullscreen="true"
-				class='che-iframe-slide'
-			/>
+			<v-card>
+				<v-card-title class='title'>Slide Preview</v-card-title>
+				<v-card-text class='pa-0'>
+					<iframe
+						:src='iframeSrc'
+						frameborder="0" 
+						allowfullscreen="true" 
+						mozallowfullscreen="true" 
+						webkitallowfullscreen="true"
+						class='che-iframe-slide'
+					/>
+				</v-card-text>
+			</v-card>
 		</v-flex>
 
 		<AddSlideModal
@@ -63,7 +68,7 @@ export default {
 			// data table component
 			propsForDataTable: {
 				headers,
-				title: 'Slides List',
+				title: 'Slide List',
 				dataType: 'slide',
 			},
 
@@ -74,7 +79,7 @@ export default {
 			isShowConfModal: false,
 			propsForConfModal: {
 				title: 'Confirmation',
-				body: 'Are you sure delete slide link?',
+				body: 'Are you sure delete slide?',
 				positifBtn: 'Delete',
 				positifBtnColor: 'error',
 				negatifBtn: 'Cancel',

@@ -1,7 +1,7 @@
 <template>
 	<v-layout id='app-video-sec' wrap>
 		<v-flex xs12>
-			<h1 class='mb-5'>Video Links</h1>
+			<h1 class='mb-5'>Videos</h1>
 		</v-flex>
 
 		<v-flex lg5 xs12 class='pa-1'>
@@ -15,13 +15,18 @@
 		</v-flex>
 
 		<v-flex lg7 xs12 class='pa-1 text-center'>
-			<iframe
-				:src='iframeSrc' 
-				frameborder='0' 
-				allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
-				allowfullscreen
-				class='che-iframe-video'
-			/>
+			<v-card>
+				<v-card-title class='title'>Video Preview</v-card-title>
+				<v-card-text class='pa-0'>
+					<iframe
+						:src='iframeSrc' 
+						frameborder='0' 
+						allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+						allowfullscreen
+						class='che-iframe-video'
+					/>
+				</v-card-text>
+			</v-card>
 		</v-flex>
 
 		<AddYoutubeLinkModal
@@ -65,7 +70,7 @@ export default {
 			// data table component
 			propsForDataTable: {
 				headers,
-				title: 'Video Link list',
+				title: 'Video list',
 				dataType: 'video',
 			},
 
@@ -76,7 +81,7 @@ export default {
 			isShowConfModal: false,
 			propsForConfModal: {
 				title: 'Confirmation',
-				body: 'Are you sure delete youtube link?',
+				body: 'Are you sure delete video?',
 				positifBtn: 'Delete',
 				positifBtnColor: 'error',
 				negatifBtn: 'Cancel',
@@ -85,17 +90,17 @@ export default {
 	},
 	computed: {},
 	methods: {
-		changePreview(linkDataObj) {
+		changePreview(dataObj) {
 			// example 'https://www.youtube.com/embed/dj31N9me_rU';
 			const youtubeBaseEmbededSrc = 'https://www.youtube.com/embed/';
-			const subbedUrl = substringYoutubeVideoId(linkDataObj.embeded_url);
+			const subbedUrl = substringYoutubeVideoId(dataObj.embeded_url);
 
-			this.iframeSrc = youtubeBaseEmbededSrc + subbedUrl;
+			this.iframeSrc = dataObj.embeded_url ? youtubeBaseEmbededSrc + subbedUrl : '';
 		},
-		deleteLink(linkDataObj) {
+		deleteLink(dataObj) {
 			this.payload = {
 				params: {
-					youtube_id: linkDataObj._id,
+					youtube_id: dataObj._id,
 					project_id: this.data._id,
 				},
 			}

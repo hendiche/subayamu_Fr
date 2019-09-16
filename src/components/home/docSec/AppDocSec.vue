@@ -110,7 +110,7 @@ export default {
 			// Datatable component
 			propsForDataTable: {
 				headers,
-				title: 'Documents List',
+				title: 'Document List',
 				dataType: 'docs',
 			},
 
