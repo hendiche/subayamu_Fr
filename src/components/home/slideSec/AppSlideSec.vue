@@ -89,7 +89,6 @@ export default {
 	computed: {},
 	methods: {
 		changePreview(dataObj) {
-			// TODO: remember when in backend remove query, and change pub to embeded
 			// example: https://docs.google.com/presentation/d/e/2PACX-1vR88TjIbRcF2Dg9dgy5jIg1d071QcJ90kjiSm5YZ8cFPUxR21Y6nHb_9At0plgX0C90_DULFckgwh3h/embed?start=false&loop=false&delayms=3000
 			this.iframeSrc = dataObj.slide_url;
 		},

@@ -51,6 +51,7 @@ const actions = {
 	// after success, will store user login data
 	[LOGIN] ({ commit }, payload) {
 		commit(BTN_LOADING_TRUE);
+
 		return new Promise((resolve) => {
 			userApi.login(payload.body)
 			.then(res => {
@@ -70,16 +71,19 @@ const actions = {
 	// after success, will set alert
 	[REGISTER] ({ commit }, payload) {
 		commit(BTN_LOADING_TRUE);
-		userApi.register(payload.body)
-		.then(res => {
-			commit(SET_ALERT, res);
-			commit(BTN_LOADING_FALSE);
+		return new Promise((resolve) => {
+			userApi.register(payload.body)
+			.then(res => {
+				commit(SET_ALERT, res);
+				commit(BTN_LOADING_FALSE);
+				resolve(true);
+			})
+			.catch(err => {
+				commit(SET_ALERT, err);
+				commit(BTN_LOADING_FALSE);
+				console.log(err);
+			});
 		})
-		.catch(err => {
-			commit(SET_ALERT, err);
-			commit(BTN_LOADING_FALSE);
-			console.log(err);
-		});
 	},
 
 	[LOGOUT] ({ commit }) {
