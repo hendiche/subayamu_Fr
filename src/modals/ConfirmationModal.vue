@@ -14,7 +14,7 @@
 					{{ dialogPosBtn }}
 				</v-btn>
 
-				<v-btn @click='$emit("close")'>{{ dialogNegBtn }}</v-btn>
+				<v-btn v-if='!hideNegatifBtn' @click='$emit("close")'>{{ dialogNegBtn }}</v-btn>
 			</v-card-actions>
 		</v-card>
 	</v-dialog>
@@ -30,6 +30,10 @@ export default {
 		positifBtn: String,
 		positifBtnColor: String,
 		negatifBtn: String,
+		hideNegatifBtn: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data: function() {
 		return {};
