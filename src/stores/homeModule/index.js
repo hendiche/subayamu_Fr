@@ -9,6 +9,7 @@ import {
 	SET_PROJECTS,
 	PAGE_LOADING_TRUE,
 	PAGE_LOADING_FALSE,
+	DOC_UPDATE,
 } from '@/stores/mutationTypes';
 import {
 	PROJECT_TABS,
@@ -17,6 +18,7 @@ import {
 	PROJECT_CONTENT,
 	PROJECT_CONTENT_DOCS,
 	ADD_DOCS,
+	EDIT_DOCS,
 	DELETE_DOCS,
 	PROJECT_CONTENT_SLIDES,
 	ADD_SLIDE,
@@ -26,10 +28,12 @@ import {
 	DELETE_YOUTUBE_LINK,
 } from '@/stores/actionTypes';
 import { homeApi } from '@/apis/index';
+import { momentDate } from '@/helpers/GeneralHelpers.js';
 
 const state = {
 	projectTabs: [],
 	homeContent: {},
+	isDocSaveStatus: false,
 };
 
 const getters = {
@@ -45,6 +49,7 @@ const getters = {
 
 		return [];
 	},
+	// return project slide where key object of project_id
 	slideList: (state) => (project_id) => {
 		if (state.homeContent[project_id]) {
 			return state.homeContent[project_id].slides;
@@ -60,6 +65,10 @@ const getters = {
 
 		return [];
 	},
+	// return auto saving status bool in document section, to use for conditioning if 
+	docSaveStatus: (state) => {
+		return state.isDocSaveStatus;
+	},
 };
 
 const mutations = {
@@ -69,6 +78,23 @@ const mutations = {
 		state.projectTabs.push({ _id: 'FOR_ADDING_BTN' });
 	},
 
+	// TODO: add comment about this mutation here
+	[DOC_UPDATE] (state, payload) {
+		const { project_id } = payload.params;
+		const tmpHomeContent = state.homeContent;
+		const tmpDocs = [];
+		
+		tmpHomeContent[project_id].docs.map(item => {
+			let tmpItem = item;
+
+			if (item._id === payload.updatedData._id) tmpItem = payload.updatedData;
+			tmpDocs.push(tmpItem);
+		});
+
+		tmpHomeContent[project_id].docs = tmpDocs;
+		state.homeContent = tmpHomeContent;
+		state.isDocSaveStatus = false;
+	},
 };
 
 const actions = {
@@ -182,6 +208,23 @@ const actions = {
 		.catch(err => {
 			console.log('error add document');
 		})
+	},
+
+	// TODO: put comment about this actions here
+	async [EDIT_DOCS] ({ commit, dispatch, state }, payload) {
+		state.isDocSaveStatus = true;
+
+		homeApi.editDocument(payload.params.document_id, payload.body)
+		.then(res => {
+			const tmpPayload = {
+				...payload,
+				...res,
+			};
+			commit(DOC_UPDATE, tmpPayload);
+		})
+		.catch(err => {
+			console.log(err, 'error update document');
+		});
 	},
 
 	// TODO: put comment about this actions here

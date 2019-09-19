@@ -9,6 +9,7 @@ export const PROJECT_CONTENT = 'PROJECT_CONTENT';
 // DOCUMENTS
 export const PROJECT_CONTENT_DOCS = 'PROJECT_CONTENT_DOCS';
 export const ADD_DOCS = 'ADD_DOCS';
+export const EDIT_DOCS = 'EDIT_DOCS';
 export const DELETE_DOCS = 'DELETE_DOCS';
 
 // SLIDES

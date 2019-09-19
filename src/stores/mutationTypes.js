@@ -7,3 +7,4 @@ export const RESET_ALERT = 'RESET_ALERT';
 export const SET_PROJECTS = 'SET_PROJECTS';
 export const PAGE_LOADING_TRUE = 'PAGE_LOADING_TRUE';
 export const PAGE_LOADING_FALSE = 'PAGE_LOADING_FALSE';
+export const DOC_UPDATE = 'DOC_UPDATE';

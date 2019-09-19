@@ -4,6 +4,7 @@
 			ref='form'
 			@keyup.native.enter='submit'
 			lazy-validation
+			:key='counting'
 		>
 			<v-text-field
 				v-model='name'
@@ -63,6 +64,7 @@ export default {
 			nameRules,
 			emailRules,
 			passwordRules,
+			counting: 0,
 		};
 	},
 	computed: {
@@ -82,7 +84,13 @@ export default {
 				}
 			};
 
-			this.$store.dispatch(REGISTER, payload);
+			this.$store.dispatch(REGISTER, payload)
+			.then(() => {
+				this.name = '';
+				this.email = '';
+				this.password = '';
+				this.counting += 1;
+			});
 		},
 	},
 }

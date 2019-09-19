@@ -96,19 +96,15 @@ export default {
 				listItem = this.videoList(this.data._id);
 			}
 
-			// set default preview from list items
-			if (listItem.length) {
-				// set default preview
-				this.selectedPreviewId = listItem[0]._id;
-				this.$emit('changePreview', listItem[0]);
-			}
+			// set default preview from list item
+			this.onChangePreview(listItem[0]);
 
 			return listItem;
 		},
 	},
 	methods: {
 		momentDate,
-		onChangePreview(item) {
+		onChangePreview(item = {}) {
 			this.selectedPreviewId = item._id;
 			this.$emit('changePreview', item);
 		},

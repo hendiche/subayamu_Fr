@@ -6,7 +6,6 @@
 				:bottom='true'
 				:right='true'
 				direction='top'
-				:open-on-hover='true'
 				:transition="transition"
 				fixed
 			>
@@ -26,27 +25,44 @@
 					dark
 					small
 					color="green"
+					@click='$router.push("home")'
 				>
 					<i class="fas fa-home"></i>
 				</v-btn>
-				<v-btn
+				<!-- <v-btn
 					fab
 					dark
 					small
 					color="indigo"
+					@click='$router.push("calendar")'
 				>
 					<i class="fas fa-calendar-alt"></i>
+				</v-btn> -->
+				<v-btn
+					fab
+					dark
+					small
+					color='amber accent-4'
+				>
+					<i class="fas fa-cog"></i>
 				</v-btn>
 				<v-btn
 					fab
 					dark
 					small
 					color="red"
-					@click='logout'
+					@click='isShowConfModal = true'
 				>
 					<i class="fas fa-sign-out-alt"></i>
 				</v-btn>
 			</v-speed-dial>
+
+			<ConfirmationModal
+				:modal='isShowConfModal'
+				v-bind='propsForConfModal'
+				@close='isShowConfModal = false'
+				@positifConfirm='logout'
+			/>
 
 			<router-view />
 		</v-flex>
@@ -55,6 +71,8 @@
 
 <script>
 import { LOGOUT } from '@/stores/actionTypes';
+import ConfirmationModal from '@/modals/ConfirmationModal.vue';
+
 
 export default {
 	name: 'AppBase',
@@ -62,7 +80,17 @@ export default {
 	data: function() {
 		return {
 			fab: false,
-			transition: 'slide-y-reverse-transition'
+			transition: 'slide-y-reverse-transition',
+
+			// confirmation modal component
+			isShowConfModal: false,
+			propsForConfModal: {
+				title: 'Confirmation',
+				body: 'Are you sure to logout?',
+				positifBtn: 'Logout',
+				positifBtnColor: 'error',
+				negatifBtn: 'Cancel',
+			},
 		};
 	},
 	computed: {},
@@ -74,7 +102,9 @@ export default {
 			});
 		},
 	},
-	components: {}
+	components: {
+		ConfirmationModal,
+	}
 }
 </script>
 

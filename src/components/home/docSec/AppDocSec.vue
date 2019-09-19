@@ -15,10 +15,24 @@
 		</v-flex>
 
 		<v-flex lg7 xs12 class='pa-1'>
-			<Editor
-				v-model='value'
-				:init='editorInit'
-			/>
+			<v-card>
+				<v-card-title class='title'>
+					Text Editor&nbsp;
+					<span v-if='currentEditorDocumentId' class='caption'>
+						{{ docSaveStatus ? 'Saving...' : `Updated at ${momentDate(data.updated_at)}` }}
+					</span>
+				</v-card-title>
+				<v-card-text class='pa-0'>
+					<Editor
+						v-if='currentEditorDocumentId'
+						id='app-doc-sec-editor'
+						v-model='value'
+						:init='editorInit'
+						@onKeyUp='onChangeTextEditor'
+					/>
+					<div v-else class='che-doc-placeholder'></div>
+				</v-card-text>
+			</v-card>
 		</v-flex>
 
 		<AddDocsModal
@@ -38,6 +52,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 // tinymce
 import tinymce from 'tinymce/tinymce';
 import Editor from '@tinymce/tinymce-vue';
@@ -53,7 +68,10 @@ import DataTable from '@/components/home/DataTable.vue';
 import AddDocsModal from '@/modals/AddDocsModal.vue';
 import ConfirmationModal from '@/modals/ConfirmationModal.vue';
 
+import { momentDate } from '@/helpers/GeneralHelpers.js';
+
 import {
+	EDIT_DOCS,
 	DELETE_DOCS,
 } from '@/stores/actionTypes';
 
@@ -66,17 +84,23 @@ export default {
 		return {
 			// this component
 			value: '',
-			payload: {},
+			payload: {
+				params: {},
+			},
+			currentEditorDocumentId: '',
+			onChangeTimer: null,
 
 			// tinymce editor component
 			editorInit: {
+				selector: 'textarea#app-doc-sec-editor',
 				plugins: 'table link lists advlist charmap hr',
-				toolbar: 'formatselect | fontselect | fontsizeselect | bold italic underline strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent |',
+				toolbar: 'formatselect | fontselect | fontsizeselect | bold italic underline strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent',
 				content_css: [
           '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
           '//www.tiny.cloud/css/codepen.min.css'
         ],
         skin_url: '/skins/ui/oxide',
+        content_style: ".mce-content-body p { margin: 8px 0 8px 0 !important; }",
         removed_menuitems: 'newdocument',
         height: 515,
         statusbar: false,
@@ -86,7 +110,7 @@ export default {
 			// Datatable component
 			propsForDataTable: {
 				headers,
-				title: 'Documents List',
+				title: 'Document List',
 				dataType: 'docs',
 			},
 
@@ -104,18 +128,41 @@ export default {
 			},
 		};
 	},
-	computed: {},
+	computed: {
+		...mapGetters([
+			'docSaveStatus',
+		]),
+	},
 	methods: {
-		changePreview(linkDataObj) {
-			this.value = linkDataObj.body;
+		momentDate,
+		changePreview(dataObj) {
+			this.value = dataObj.body;
+			this.currentEditorDocumentId = dataObj._id;
+			this.$forceUpdate();
 		},
-		deleteLink(linkDataObj) {
+		onChangeTextEditor(val) {
+			clearTimeout(this.onChangeTimer);
+
+			this.onChangeTimer = setTimeout(() => {
+				this.payload = {
+					body: { body: this.value },
+					params: { 
+						document_id: this.currentEditorDocumentId,
+						project_id: this.data._id,
+					},
+				};
+
+				this.$store.dispatch(EDIT_DOCS, this.payload);
+				this.editorStatus = 'done...';
+			}, 700);
+		},
+		deleteLink(dataObj) {
 			this.payload = {
 				params: {
-					document_id: linkDataObj._id,
+					document_id: dataObj._id,
 					project_id: this.data._id,
 				},
-			}
+			};
 
 			this.isShowConfModal = true;
 		},

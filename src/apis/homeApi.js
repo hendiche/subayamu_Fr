@@ -38,6 +38,13 @@ class HomeApi {
 			body,
 		});
 	}
+	async editDocument(document_id, body) {
+		return api.fetch({
+			url: 'projects/docs/' + document_id,
+			method: 'PUT',
+			body,
+		});
+	}
 
 	async deleteDocument(document_id) {
 		return api.fetch({
