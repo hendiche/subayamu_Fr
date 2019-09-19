@@ -25,16 +25,26 @@
 					dark
 					small
 					color="green"
+					@click='$router.push("home")'
 				>
 					<i class="fas fa-home"></i>
 				</v-btn>
-				<v-btn
+				<!-- <v-btn
 					fab
 					dark
 					small
 					color="indigo"
+					@click='$router.push("calendar")'
 				>
 					<i class="fas fa-calendar-alt"></i>
+				</v-btn> -->
+				<v-btn
+					fab
+					dark
+					small
+					color='amber accent-4'
+				>
+					<i class="fas fa-cog"></i>
 				</v-btn>
 				<v-btn
 					fab
