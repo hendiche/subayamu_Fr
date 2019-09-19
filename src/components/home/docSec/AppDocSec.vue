@@ -25,7 +25,6 @@
 				<v-card-text class='pa-0'>
 					<Editor
 						v-if='currentEditorDocumentId'
-						id='app-doc-sec-editor'
 						v-model='value'
 						:init='editorInit'
 						@onKeyUp='onChangeTextEditor'
