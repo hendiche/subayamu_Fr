@@ -15,7 +15,7 @@
     "core-js": "^2.6.9",
     "moment": "^2.24.0",
     "roboto-fontface": "*",
-    "tinymce": "^5.0.14",
+    "tinymce": "^5.2.2",
     "vue": "^2.6.10",
     "vue-router": "^3.0.7",
     "vuetify": "^2.0.5",
